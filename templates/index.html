@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimFleet Operations Center</title>
+    
+    <!-- Leaflet CSS for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="top-bar">
+            <div class="logo">
+                <span class="pulse-dot"></span>
+                <h1>SimFleet Operations Center</h1>
+            </div>
+            <div class="clock" id="live-clock">00:00:00</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="grid-layout">
+            <!-- Left Column: Telemetry Cards -->
+            <section class="telemetry-panel">
+                <h2>Live Fleet Telemetry</h2>
+                
+                <div class="van-card" id="card-van_01">
+                    <div class="van-header">
+                        <h3>Van 01 (Sheraton)</h3>
+                        <span class="status-badge" id="status-van_01">Connecting...</span>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric"><span class="label">Speed</span><span class="val" id="speed-van_01">0</span> mph</div>
+                        <div class="metric"><span class="label">RPM</span><span class="val" id="rpm-van_01">0</span></div>
+                        <div class="metric"><span class="label">Temp</span><span class="val" id="temp-van_01">0</span> °C</div>
+                        <div class="metric"><span class="label">Fuel</span><span class="val" id="fuel-van_01">0</span> %</div>
+                    </div>
+                </div>
+
+                <div class="van-card" id="card-van_02">
+                    <div class="van-header">
+                        <h3>Van 02 (Gaylord)</h3>
+                        <span class="status-badge" id="status-van_02">Connecting...</span>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric"><span class="label">Speed</span><span class="val" id="speed-van_02">0</span> mph</div>
+                        <div class="metric"><span class="label">RPM</span><span class="val" id="rpm-van_02">0</span></div>
+                        <div class="metric"><span class="label">Temp</span><span class="val" id="temp-van_02">0</span> °C</div>
+                        <div class="metric"><span class="label">Fuel</span><span class="val" id="fuel-van_02">0</span> %</div>
+                    </div>
+                </div>
+
+                <div class="van-card" id="card-van_03">
+                    <div class="van-header">
+                        <h3>Van 03 (Hyatt)</h3>
+                        <span class="status-badge" id="status-van_03">Connecting...</span>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric"><span class="label">Speed</span><span class="val" id="speed-van_03">0</span> mph</div>
+                        <div class="metric"><span class="label">RPM</span><span class="val" id="rpm-van_03">0</span></div>
+                        <div class="metric"><span class="label">Temp</span><span class="val" id="temp-van_03">0</span> °C</div>
+                        <div class="metric"><span class="label">Fuel</span><span class="val" id="fuel-van_03">0</span> %</div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <!-- Right Column: Minimap -->
+            <section class="map-panel">
+                <div id="fleet-map"></div>
+            </section>
+
+        </main>
+
+        <!-- Middle Row: Active Alerts -->
+        <section class="alerts-full-width">
+            <div class="alerts-panel">
+                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h3 id="active-alerts-title" style="margin-bottom: 0;">Active Alerts (0)</h3>
+                    <button id="manage-rules-btn" class="icon-btn" title="Manage Alert Rules" style="background: none; border: none; cursor: pointer; font-size: 1.2rem;">⚙️</button>
+                </div>
+                <div id="alerts-container" class="horizontal-alerts">
+                    <p class="no-alerts">No active alerts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom: AI Chat Interface -->
+        <section class="ai-terminal">
+            <div class="terminal-header">
+                <h3>🤖 AI Operations Agent</h3>
+                <span class="shortcut-hint">[Shift + Tab] to cycle saved prompts</span>
+            </div>
+            <div class="terminal-output" id="chat-output">
+                <div class="chat-msg system">Connected to SimFleet AI Backend. Ready for queries or alert commands.</div>
+            </div>
+            <div class="terminal-input-row">
+                <span class="prompt-arrow">>&nbsp;</span>
+                <input type="text" id="chat-input" placeholder="Ask AI to monitor idle time, request fuel updates, or analyze routes..." autocomplete="off">
+            </div>
+        </section>
+    </div>
+
+    <!-- Rules Management Modal -->
+    <dialog id="rules-modal" class="glass-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Manage Background Rules</h2>
+                <button id="close-modal-btn" class="icon-btn" style="background: none; border: none; cursor: pointer; color: white;">❌</button>
+            </div>
+            <div class="modal-body">
+                <table class="rules-table">
+                    <thead>
+                        <tr>
+                            <th>Vehicle</th>
+                            <th>Metric</th>
+                            <th>Condition</th>
+                            <th>Threshold</th>
+                            <th>Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rules-tbody">
+                        <!-- Rules injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/static/js/app.js?v=2"></script>
+</body>
+</html>

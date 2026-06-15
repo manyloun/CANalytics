@@ -281,6 +281,20 @@ This agent bridges your vehicle telemetry with passenger booking databases to ma
 *   **The Action**: If the agent computes that Terminal C is gridlocked, but **Van 3** is currently idling empty right outside Terminal C, the AI agent automatically swaps the dispatch assignments, updates the drivers' tablets, and texts the waiting customer:
     *   *📱 "Hi Sarah, your shuttle assignment has been optimized to beat terminal traffic! Your new driver, Carlos (Van 3), is pulling up to Terminal C Baggage Claim Curb Zone 4 in exactly 90 seconds. Look for Van #3!"*
 
+---
+
+## 🌐 SimFleet Operations Center (Web App Dashboard)
+
+Beyond the backend pipeline, the project features a **fully interactive, real-time web application (SimFleet)**. 
+Built using **FastAPI, Uvicorn, and HTML/CSS/VanillaJS**, this dashboard allows fleet operators to visualize physics-based telemetry streams live.
+
+### Key Features of SimFleet:
+1. **Live Geographic Map (Leaflet.js)**: Tracks vehicles moving across DFW Airport with real-time coordinate updates. Clicking a marker auto-scrolls to the vehicle's telemetry card.
+2. **WebSocket Telemetry Stream**: Dashboards auto-update vehicle Speed, RPM, Temp, and Fuel values in milliseconds without requiring a page refresh.
+3. **Background Alert Rules Engine**: Managers can define thresholds (e.g., "Alert me if speed > 80 mph"). An asyncio background loop runs continuously and fires physical notifications directly to the UI's full-width alert ticker.
+4. **Historical Telemetry Data Snapshots**: The embedded SQLite database captures the *exact* JSON metrics of a vehicle at the precise second an alert triggers.
+5. **Context-Aware AI Assistant**: The integrated web terminal uses `langchain` and `gpt-4o` to chat with operators. The LLM reads the live matrix data AND the recent alert snapshot logs, allowing the AI to perfectly answer Root-Cause questions like: *"Why did Van 3 trigger an idle alert?"*
+
 I just hired an AI to help me with this running this operation. For this example I decided to use OpenAI GPT instead of Claude.
 
 ### Prerequisites & Setup
@@ -342,7 +356,16 @@ Thinking... Formulating Fleet Analytics Profile...
 Van_03 is wasting the highest percentage of its time idling, with an idle ratio of 43.81%. It spent 3.43 minutes sitting parked.
 
 Ask the AI Agent 🤖 >
+```
 
+### Running the SimFleet Web App (Operations Center)
+To access the real-time Leaflet map, telemetry cards, background alerts dashboard, and the integrated AI Web Terminal:
+
+```bash
+# Start the FastAPI Web Server via Uvicorn
+uvicorn simfleet_app:app --host 0.0.0.0 --port 8000
+```
+Then navigate to **http://localhost:8000** in your web browser.
 
 ------------------------------
 ## Production-Ready Operations Stack (The Big Picture)

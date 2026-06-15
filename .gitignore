@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+alerts.sqlite
+alerts.sqlite-journal
+wican_bronze/
+wican_silver/
+wican_gold/
