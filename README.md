@@ -288,11 +288,28 @@ To run the AI agent, you will need to install its dependencies and configure you
 
 ```bash
 # Install the required Python packages
-pip install langchain-openai langchain-core duckdb
+pip install langchain-openai langchain-ollama langchain-core duckdb prompt_toolkit
 
-# Set your OpenAI API key in your environment
+# Set your OpenAI API key in your environment (if using OpenAI backend)
 set OPENAI_API_KEY=your_api_key_here  # Windows
 export OPENAI_API_KEY=your_api_key_here  # Linux/Mac
+```
+
+### Running the AI Agent
+By default, the script connects to your local Ollama instance at `http://192.168.5.65:11434`. You can switch backends, select specific models, or override the endpoint using command-line arguments. The terminal interface also features an interactive `[Shift+Tab]` cycler that lets you quickly load saved questions from the `prompts.txt` file.
+
+```bash
+# Run with local Ollama auto-discovery (Default)
+python ai_fleet_agent.py
+
+# Run with a custom Ollama endpoint URL
+python ai_fleet_agent.py --ollama-url http://192.168.6.51:11434
+
+# Run with a specific Ollama model (skips the interactive model scan)
+python ai_fleet_agent.py --ollama-model mistral
+
+# Run with OpenAI (GPT-4o)
+python ai_fleet_agent.py --backend openai
 ```
 
 D:\CAN>p ai_fleet_agent.py

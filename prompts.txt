@@ -1,0 +1,4 @@
+Which of our vans has the worst idle ratio, and how many minutes did it spend sitting parked?
+Given that Van 3 is running the Hyatt Regency internal terminal loop, why might its idle percentage be so much higher than Van 1 which is doing the Sheraton highway run?
+Our goal is to reduce fuel waste across the fleet. Based on the current data matrix, what specific operational changes should I make to dispatching right now?
+Are any of the vans currently operating efficiently? Define what you consider an acceptable idle ratio for a resort long-cruise run versus a terminal loop, and tell me if Van 2 is meeting that standard.
